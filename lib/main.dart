@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:personal_expense_app/widgets/chart.dart';
 import 'package:personal_expense_app/widgets/transaction_list.dart';
 import './widgets/new_transactionList.dart';
 
@@ -16,15 +17,21 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.purple,
           accentColor: Colors.amber,
           fontFamily: 'Quicksand',
-          textTheme: ThemeData.light().textTheme.copyWith(
-                  title: TextStyle(
+          textTheme: ThemeData
+              .light()
+              .textTheme
+              .copyWith(
+              title: TextStyle(
                 fontFamily: 'OpenSans',
                 fontWeight: FontWeight.bold,
                 fontSize: 18,
               )),
           appBarTheme: AppBarTheme(
-              textTheme: ThemeData.light().textTheme.copyWith(
-                      title: TextStyle(
+              textTheme: ThemeData
+                  .light()
+                  .textTheme
+                  .copyWith(
+                  title: TextStyle(
                     fontFamily: 'OpenSans',
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -45,6 +52,12 @@ class _MyHomePageState extends State<MyHomePage> {
     //     id: '12', title: 'shopping', ammount: 69.99, date: DateTime.now()),
     // Transactions(id: 't2', title: 'food', ammount: 78.09, date: DateTime.now()),
   ];
+
+  List<Transactions> get _recentTransaction {
+    return _userTransaction.where((tx) {
+      return tx.date.isAfter(DateTime.now().subtract(Duration(days: 7)));
+    }).toList();
+  }
 
   void _addNewTransaction(String txTitle, double txAmount) {
     final newTxt = new Transactions(
@@ -68,6 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,14 +108,7 @@ class _MyHomePageState extends State<MyHomePage> {
           // mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Container(
-              width: double.infinity,
-              child: Card(
-                color: Colors.blue,
-                child: Text("The chart"),
-                elevation: 50,
-              ),
-            ),
+            Chart(_recentTransaction),
             TransactionList(_userTransaction),
           ],
         ),
